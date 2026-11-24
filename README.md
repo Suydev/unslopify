@@ -1,21 +1,31 @@
-# suydev-agent-skills
+# unslopify
 
 One npm package that installs the `no-ai-slop` and `durable-instructions` skills into every agent on this machine. Both skills are bundled, so no network access is needed at install time.
 
 ## Install
 
 ```bash
-npm install -g suydev-agent-skills
+npm install -g unslopify
 ```
 
 Or run it once without installing:
 
 ```bash
-npx suydev-agent-skills --dry-run
-npx suydev-agent-skills
+npx unslopify --dry-run
+npx unslopify
 ```
 
 After installing, restart your agents so they re-scan their skill directories.
+
+## Guided setup
+
+For an interactive walkthrough — detected agents, choice of targets, confirmation, and overwrite policy — run:
+
+```bash
+unslopify setup
+```
+
+It asks which agents to target, whether to include project-local folders, whether to use the shared folder, and which locations to write to before anything changes. For scripts and CI, use the non-interactive `install` command instead. `setup` is unavailable when stdin is not a terminal; the CLI will tell you to use `install` in that case.
 
 ## What it does
 
@@ -38,16 +48,16 @@ One physical copy per path: targets are de-duplicated. For example `~/.agents/sk
 ## Commands
 
 ```bash
-suydev-agent-skills list                 # detected agents and resolved paths
-suydev-agent-skills --dry-run            # preview without writing
-suydev-agent-skills --all                # every known folder, detected or not
-suydev-agent-skills --agents claude,cursor,opencode
-suydev-agent-skills --project            # also write .agents/skills, .claude/skills, etc. in cwd
-suydev-agent-skills --force              # overwrite files that differ
-suydev-agent-skills --json               # machine-readable report
-suydev-agent-skills uninstall --dry-run  # preview removal
-suydev-agent-skills uninstall            # remove bundled files only
-suydev-agent-skills uninstall --all      # from every known folder
+unslopify list                 # detected agents and resolved paths
+unslopify --dry-run            # preview without writing
+unslopify --all                # every known folder, detected or not
+unslopify --agents claude,cursor,opencode
+unslopify --project            # also write .agents/skills, .claude/skills, etc. in cwd
+unslopify --force              # overwrite files that differ
+unslopify --json               # machine-readable report
+unslopify uninstall --dry-run  # preview removal
+unslopify uninstall            # remove bundled files only
+unslopify uninstall --all      # from every known folder
 ```
 
 `uninstall` removes only files that are byte-identical to the bundled skill. Any local edit or extra file in a skill folder stops removal for that folder, so your changes survive.
@@ -67,7 +77,7 @@ npm run sync              # recopy skills from ~/no-ai-slop and ~/durable-instru
 npm pack                  # sync + test + tarball
 ```
 
-`npm run sync` reads the two sibling repositories in your home directory; published tarballs already contain the synced skills. Source is at `https://github.com/Suydev/universal-agent-skills`.
+`npm run sync` reads the two sibling repositories in your home directory; published tarballs already contain the synced skills. Source is at `https://github.com/Suydev/unslopify`.
 
 Publishing happens two ways:
 

@@ -3,18 +3,21 @@
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createInterface } from 'node:readline/promises';
 import { AGENTS, detectAgents, resolveTargets } from '../lib/targets.mjs';
 import { findSkills, installAll, uninstallAll } from '../lib/install.mjs';
+import { askYesNo, parseSelection } from '../lib/setup.mjs';
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_SKILLS = path.join(ROOT, 'skills');
 
-const HELP = `suydev-agent-skills — install portable skills into every agent on this machine
+const HELP = `unslopify — install portable skills into every agent on this machine
 
 Usage:
-  suydev-agent-skills [install] [options]
-  suydev-agent-skills uninstall [options]
-  suydev-agent-skills list
+  unslopify setup [options]   # guided setup with confirmation prompts
+  unslopify [install] [options]
+  unslopify uninstall [options]
+  unslopify list
 
 Options:
   --all                 target every known agent directory
@@ -50,7 +53,7 @@ function parse(args) {
   const rest = [];
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
-    if (arg === 'install' || arg === 'list' || arg === 'uninstall') {
+    if (arg === 'install' || arg === 'list' || arg === 'uninstall' || arg === 'setup') {
       options.command = arg;
     } else if (arg === '--all') options.all = true;
     else if (arg === '--agents') options.agents = (args[++i] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
@@ -95,10 +98,53 @@ function printReport(results, json) {
   process.stdout.write(`\n${Object.entries(summary).map(([key, value]) => `${value} ${key}`).join(', ')}\n`);
 }
 
+async function runSetup(options) {
+  if (!process.stdin.isTTY) {
+    throw new Error('setup needs an interactive terminal; use "unslopify install" in scripts');
+  }
+  const detected = detectAgents({ home: options.home });
+  const readline = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    process.stdout.write('\nDetected agents:\n');
+    if (detected.length === 0) process.stdout.write('  none found\n');
+    for (const [index, id] of detected.entries()) {
+      const agent = AGENTS.find((entry) => entry.id === id);
+      process.stdout.write(`  ${index + 1}) ${id} — ${agent.name}\n`);
+    }
+    const choice = await readline.question('\nWhich agents? (numbers or ids, comma-separated; Enter = all detected) ');
+    const agents = parseSelection(choice, detected);
+    const project = askYesNo(await readline.question('Also install project-local folders in this directory? [y/N] '), false);
+    const universal = askYesNo(await readline.question('Install into the shared ~/.agents/skills folder? [Y/n] '), true);
+
+    const targets = resolveTargets({
+      home: options.home,
+      agents,
+      project,
+      includeUniversal: universal,
+    });
+    process.stdout.write('\nPlanned locations:\n');
+    for (const target of targets) {
+      process.stdout.write(`  ${target.path} [${target.agents.join(', ')}]\n`);
+    }
+    if (!askYesNo(await readline.question('\nInstall to these locations? [Y/n] '), true)) {
+      process.stdout.write('Cancelled.\n');
+      return;
+    }
+    const force = askYesNo(await readline.question('Overwrite files that differ from the bundled skills? [y/N] '), false);
+    const results = await installAll({ skillsDir: options.skillsDir, targets, force });
+    printReport(results, false);
+    process.stdout.write('\nRestart your agents so they re-scan their skill directories.\n');
+  } finally {
+    readline.close();
+  }
+}
+
 try {
   const options = parse(process.argv.slice(2));
   if (options.command === 'help') {
     process.stdout.write(HELP);
+  } else if (options.command === 'setup') {
+    await runSetup(options);
   } else {
     const detected = detectAgents({ home: options.home });
     const targets = resolveTargets({

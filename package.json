@@ -1,12 +1,17 @@
 {
-  "name": "suydev-agent-skills",
-  "version": "1.1.0",
+  "name": "unslopify",
+  "version": "1.0.0",
   "description": "Install the no-ai-slop and durable-instructions skills into every agent on this machine with one command.",
   "type": "module",
   "bin": {
-    "suydev-agent-skills": "bin/agent-skills.js",
-    "install-agent-skills": "bin/agent-skills.js"
+    "unslopify": "bin/unslopify.js",
+    "install-agent-skills": "bin/unslopify.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Suydev/unslopify.git"
+  },
+  "homepage": "https://github.com/Suydev/unslopify",
   "files": [
     "bin",
     "lib",
@@ -31,6 +36,7 @@
     "windsurf",
     "amp",
     "no-ai-slop",
+    "unslopify",
     "durable-instructions"
   ],
   "engines": {
