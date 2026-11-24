@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+#!/bin/sh
+':' //; exec node "$0" "$@"
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
