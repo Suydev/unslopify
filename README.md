@@ -77,22 +77,6 @@ unslopify uninstall --all      # from every known folder
 - Symlinked skill directories are skipped, never written through.
 - No dependencies, no telemetry, no network calls during install. Node 18+ required.
 
-## Development
-
-```bash
-npm test                  # node:test suite
-npm run verify            # tests + npm pack --dry-run tarball check
-npm run sync              # recopy skills from ~/no-ai-slop and ~/durable-instructions
-npm pack                  # sync + test + tarball
-```
-
-`npm run sync` reads the two sibling repositories in your home directory; published tarballs already contain the synced skills. Source is at `https://github.com/Suydev/unslopify`.
-
-Publishing happens two ways:
-
-- Locally: `npm login && npm publish` from the package directory.
-- Automatically: push to `main`; `.github/workflows/publish.yml` runs the tests and `npm publish --provenance`. This needs a repository secret named `NPM_TOKEN`, and each push must bump `version` in `package.json` or npm rejects the duplicate version.
-
 ## Why these paths
 
 SKILL.md is an open format used by many agents; the standard defines the file, not the folder. Vendor-documented personal/project folders were checked on 2026-11-24: [Claude Code](https://code.claude.com/docs/en/skills), [OpenCode](https://docs.dev.opencode.ai/docs/skills), [Gemini CLI](https://geminicli.com/docs/cli/skills/), [Cursor](https://cursor.com/docs/skills), [GitHub Copilot](https://docs.github.com/en/copilot/concepts/customizations/agent-skills), [Windsurf](https://docs.windsurf.com/windsurf/cascade/skills), [Amp](https://ampcode.com/docs/customize/skills), and [this cross-agent path guide](https://claudeskills.page/guides/agent-skills-in-other-tools).
