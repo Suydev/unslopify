@@ -81,6 +81,7 @@ unslopify uninstall --all      # from every known folder
 
 ```bash
 npm test                  # node:test suite
+npm run verify            # tests + npm pack --dry-run tarball check
 npm run sync              # recopy skills from ~/no-ai-slop and ~/durable-instructions
 npm pack                  # sync + test + tarball
 ```
