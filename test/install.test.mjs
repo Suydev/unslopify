@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { detectAgents, resolveTargets } from '../lib/targets.mjs';
-import { installAll } from '../lib/install.mjs';
+import { installAll, uninstallAll } from '../lib/install.mjs';
 
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), 'agent-skills-test-'));
@@ -79,6 +79,31 @@ test('dry run writes nothing and symlinked targets are skipped', async () => {
     const symlinkRun = await installAll({ skillsDir: skills, targets });
     assert.equal(symlinkRun[0].status, 'skipped');
     assert.match(symlinkRun[0].reason, /symlink/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('uninstall removes only bundled files and protects local edits', async () => {
+  const { root, home, skills } = await fixture();
+  try {
+    const targets = resolveTargets({ home, agents: ['claude'], includeUniversal: false });
+    await installAll({ skillsDir: skills, targets });
+
+    const dry = await uninstallAll({ skillsDir: skills, targets, dryRun: true });
+    assert.equal(dry[0].status, 'would-remove');
+    assert.ok(existsSync(path.join(home, '.claude', 'skills', 'demo', 'SKILL.md')));
+
+    await writeFile(path.join(home, '.claude', 'skills', 'demo', 'notes.md'), 'mine\n');
+    const protectedRun = await uninstallAll({ skillsDir: skills, targets });
+    assert.equal(protectedRun[0].status, 'skipped');
+    assert.match(protectedRun[0].reason, /not in bundle/);
+    assert.ok(existsSync(path.join(home, '.claude', 'skills', 'demo', 'SKILL.md')));
+
+    await rm(path.join(home, '.claude', 'skills', 'demo', 'notes.md'));
+    const removed = await uninstallAll({ skillsDir: skills, targets });
+    assert.equal(removed[0].status, 'removed');
+    assert.equal(existsSync(path.join(home, '.claude', 'skills', 'demo')), false);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

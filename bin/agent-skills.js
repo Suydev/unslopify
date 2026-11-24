@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AGENTS, detectAgents, resolveTargets } from '../lib/targets.mjs';
-import { findSkills, installAll } from '../lib/install.mjs';
+import { findSkills, installAll, uninstallAll } from '../lib/install.mjs';
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DEFAULT_SKILLS = path.join(ROOT, 'skills');
@@ -13,6 +13,7 @@ const HELP = `suydev-agent-skills — install portable skills into every agent o
 
 Usage:
   suydev-agent-skills [install] [options]
+  suydev-agent-skills uninstall [options]
   suydev-agent-skills list
 
 Options:
@@ -30,6 +31,7 @@ Options:
 Default: detected agents + the shared ~/.agents/skills directory, personal scope only.
 Existing files that differ are skipped; never overwritten without --force.
 Symlinked skill directories are left untouched.
+Uninstall removes only files identical to the bundle; local edits are left untouched.
 `;
 
 function parse(args) {
@@ -48,7 +50,7 @@ function parse(args) {
   const rest = [];
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
-    if (arg === 'install' || arg === 'list') {
+    if (arg === 'install' || arg === 'list' || arg === 'uninstall') {
       options.command = arg;
     } else if (arg === '--all') options.all = true;
     else if (arg === '--agents') options.agents = (args[++i] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
@@ -76,7 +78,10 @@ function printReport(results, json) {
     updated: '~',
     unchanged: '=',
     skipped: '!',
+    absent: '.',
+    removed: '-',
     'would-write': '?',
+    'would-remove': '?',
   };
   for (const result of results) {
     const agents = result.agents.join(', ');
@@ -112,12 +117,14 @@ try {
         process.stdout.write(`Detected agents: ${detected.join(', ') || 'none'}\n`);
         process.stdout.write(`Targets: ${targets.length}\n\n`);
       }
-      const results = await installAll({
-        skillsDir: options.skillsDir,
-        targets,
-        force: options.force,
-        dryRun: options.dryRun,
-      });
+      const results = options.command === 'uninstall'
+        ? await uninstallAll({ skillsDir: options.skillsDir, targets, dryRun: options.dryRun })
+        : await installAll({
+          skillsDir: options.skillsDir,
+          targets,
+          force: options.force,
+          dryRun: options.dryRun,
+        });
       printReport(results, options.json);
     }
   }

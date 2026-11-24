@@ -45,7 +45,12 @@ suydev-agent-skills --agents claude,cursor,opencode
 suydev-agent-skills --project            # also write .agents/skills, .claude/skills, etc. in cwd
 suydev-agent-skills --force              # overwrite files that differ
 suydev-agent-skills --json               # machine-readable report
+suydev-agent-skills uninstall --dry-run  # preview removal
+suydev-agent-skills uninstall            # remove bundled files only
+suydev-agent-skills uninstall --all      # from every known folder
 ```
+
+`uninstall` removes only files that are byte-identical to the bundled skill. Any local edit or extra file in a skill folder stops removal for that folder, so your changes survive.
 
 ## Safety
 
@@ -62,7 +67,12 @@ npm run sync              # recopy skills from ~/no-ai-slop and ~/durable-instru
 npm pack                  # sync + test + tarball
 ```
 
-`npm run sync` reads the two sibling repositories in your home directory; published tarballs already contain the synced skills. To publish: `npm login && npm publish`.
+`npm run sync` reads the two sibling repositories in your home directory; published tarballs already contain the synced skills. Source is at `https://github.com/Suydev/universal-agent-skills`.
+
+Publishing happens two ways:
+
+- Locally: `npm login && npm publish` from the package directory.
+- Automatically: push to `main`; `.github/workflows/publish.yml` runs the tests and `npm publish --provenance`. This needs a repository secret named `NPM_TOKEN`, and each push must bump `version` in `package.json` or npm rejects the duplicate version.
 
 ## Why these paths
 
