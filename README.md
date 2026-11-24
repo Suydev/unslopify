@@ -17,6 +17,14 @@ npx unslopify
 
 After installing, restart your agents so they re-scan their skill directories.
 
+## Troubleshooting
+
+If `unslopify: command not found` after a successful global install:
+
+1. Check the global bin is on your PATH: `npm prefix -g`, then look for `bin/unslopify` there.
+2. Older installs of `suydev-agent-skills` left an `install-agent-skills` symlink. Remove it with `rm "$(npm prefix -g)/bin/install-agent-skills"` and reinstall.
+3. Reinstall cleanly with `npm uninstall -g unslopify && npm install -g unslopify`.
+
 ## Guided setup
 
 For an interactive walkthrough — detected agents, choice of targets, confirmation, and overwrite policy — run:
