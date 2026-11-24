@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Northstar — AI productivity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body { background: #FAF6EF; color: #171717; text-align: center; font-family: system-ui, sans-serif; }
+    .glow { position: absolute; filter: blur(80px); background: radial-gradient(violet, transparent); }
+    .card { background: white; border: 1px solid #eee; border-radius: 16px; padding: 24px; }
+    .pill { border-radius: 999px; background: #ede9fe; padding: 4px 12px; font-size: 12px; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: 11px; }
+    .pulse { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 1.5s infinite; }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+  <section class="card">
+    <span class="pill">NEW · FOR TEAMS</span>
+    <p class="eyebrow">WHY CHOOSE US</p>
+    <h1 style="font-family:'Instrument Serif'">A quieter way to <em>work</em>.</h1>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="card"><span class="icon">✨</span><h3>Fast</h3><p>10x faster results.</p></div>
+      <div class="card"><span class="icon">⚡</span><h3>Simple</h3><p>Real impact, real teams.</p></div>
+      <div class="card"><span class="icon">🎯</span><h3>Focused</h3><p>Ship from the shell.</p></div>
+    </div>
+    <p><span class="pulse"></span> 48/48 NOMINAL</p>
+    <a href="/start">Get started <span class="arrow-right">→</span></a>
+    <a href="/docs">Learn more →</a>
+    <p>Design · Build · Ship</p>
+  </section>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('fade-in'); });
+    });
+  </script>
+</body>
+</html>

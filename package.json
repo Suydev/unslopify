@@ -1,0 +1,40 @@
+{
+  "name": "suydev-agent-skills",
+  "version": "1.0.0",
+  "description": "Install the no-ai-slop and durable-instructions skills into every agent on this machine with one command.",
+  "type": "module",
+  "bin": {
+    "suydev-agent-skills": "bin/agent-skills.js",
+    "install-agent-skills": "bin/agent-skills.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "sync": "node scripts/sync-skills.mjs",
+    "prepack": "node scripts/sync-skills.mjs && npm test"
+  },
+  "keywords": [
+    "agent-skills",
+    "SKILL.md",
+    "claude-code",
+    "codex",
+    "cursor",
+    "gemini-cli",
+    "github-copilot",
+    "opencode",
+    "windsurf",
+    "amp",
+    "no-ai-slop",
+    "durable-instructions"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

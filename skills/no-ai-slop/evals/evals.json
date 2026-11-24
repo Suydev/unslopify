@@ -1,0 +1,40 @@
+{
+  "skill_name": "no-ai-slop",
+  "evals": [
+    {
+      "id": 1,
+      "name": "audit-sloppy-landing",
+      "prompt": "Here's a landing page I'm about to ship: ~/no-ai-slop/evals/fixtures/sloppy-landing.html. Review it and tell me honestly whether it looks generic.",
+      "expected_output": "A compact scored slop audit with specific file:line evidence, severity, why each tell reads as AI, and concrete fixes. Should identify cream background, italic headline word, pill, three icon cards, made-up stats, arrows, and two-word sentences.",
+      "files": ["/data/data/com.termux/files/home/no-ai-slop/evals/fixtures/sloppy-landing.html"]
+    },
+    {
+      "id": 2,
+      "name": "proactive-audit-on-generation",
+      "prompt": "Write me a hero section for a local-first note-taking app. Plain HTML and CSS, no frameworks. Keep it short.",
+      "expected_output": "Working hero HTML/CSS that avoids the 20 tells by construction, ideally with a brief note on the deliberate choices. No cream wash, no italic headline word, no pill, no sparkle, no 'quiet'/'real', no fake stats.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "rewrite-generic-dashboard",
+      "prompt": "Our dashboard hero has a cream background, three icon cards in a row, and a '10x faster' stat line. Make it look less AI-generated — rewrite the hero and show me what changed.",
+      "expected_output": "An audit of the described tells plus a rewritten hero with structural changes (asymmetric layout or single feature, sourced/removed stats, revised copy) and a re-score showing the improvement.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "positive-direction-and-3d-decision",
+      "prompt": "Make my text-first B2B docs landing page astonishing — I want a premium 3D scroll hero like the award winners. What should I build instead?",
+      "expected_output": "Loads references/impressive-ui-patterns.md, gives a Direction block naming hero pattern, proof artifact, component composition and motion tier, explains why scroll-driven 3D is the wrong tier for text-first content, proposes the cheaper CSS/Lottie or static-artifact alternative with reduced-motion and DOM copy, and offers to re-audit after any rewrite.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "diverse-reference-selection",
+      "prompt": "Redesign our analytics product landing page. Give me real sites to study instead of the usual three templates.",
+      "expected_output": "Loads references/reference-library.md, selects 3-6 references from at least three different families (whole site, section/component, flow or teardown), names one principle taken from each, and states that assets, copy and layouts are not copied.",
+      "files": []
+    }
+  ]
+}

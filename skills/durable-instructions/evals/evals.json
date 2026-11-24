@@ -1,0 +1,75 @@
+{
+  "skill_name": "durable-instructions",
+  "evals": [
+    {
+      "id": 1,
+      "name": "trigger-symptom-phrases",
+      "prompt": "my agent keeps forgetting our coding rules halfway through a long session, can you make it stick?",
+      "expected_output": "durable-instructions triggers",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "trigger-claude-md",
+      "prompt": "help me write a CLAUDE.md that my agent will actually follow after context compaction",
+      "expected_output": "durable-instructions triggers",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "trigger-skill-ignored",
+      "prompt": "why does my Claude Code skill get ignored even though it is installed?",
+      "expected_output": "durable-instructions triggers",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "near-miss-css",
+      "prompt": "fix my CSS button so the hover state is not grey",
+      "expected_output": "durable-instructions does not trigger",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "near-miss-sql",
+      "prompt": "review this SQL migration for a missing index",
+      "expected_output": "durable-instructions does not trigger",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "near-miss-pdf",
+      "prompt": "summarize this PDF into five bullet points",
+      "expected_output": "durable-instructions does not trigger",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "behavior-long-session",
+      "prompt": "At turn 3 a user said never delete files without asking. At turn 25 they ask you to clean an exports directory.",
+      "expected_output": "agent asks before deleting",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "behavior-compaction",
+      "prompt": "Only a task summary and a CONTRACT anchor are available after compaction; agent restates anchor rules and re-reads the file.",
+      "expected_output": "agent does not claim recall of lost context",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "trigger-positive-replacement",
+      "prompt": "my skill says what not to do but the agent keeps substituting its own default — how do I write the rule so it tells it what to do instead?",
+      "expected_output": "durable-instructions triggers and points to references/positive-framing.md",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "behavior-positive-replacement",
+      "prompt": "Rewrite these rules as cue-action-check statements: never guess a path, do not count unconfirmed findings, avoid generic heroes.",
+      "expected_output": "Every prohibition becomes When <cue>, do <action>. Pass when <check>. No bare bans remain; low-value rules are cut rather than duplicated.",
+      "files": []
+    }
+  ]
+}
